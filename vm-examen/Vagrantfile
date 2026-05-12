@@ -1,0 +1,56 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+
+Vagrant.configure("2") do |config|
+
+  #Asignar 1ra Letra del Nombre y Apellido
+  VMPostFijo="Fpapetti"
+
+  # VagrantBox que se usara para levantar.
+  config.vm.box = "perk/ubuntu-2204-arm64"
+  
+  #Nombre de la pc dentro del Sistema Operativo
+  config.vm.hostname = "Examen202509-#{VMPostFijo}"
+  
+  # Comparto la carpeta del host donde estoy parado contra la vm
+  config.vm.synced_folder 'compartido', '/home/vagrant/carpeta_compartida'
+  
+  # Configuración de Red
+  config.vm.network "private_network", :name => '', ip: "192.168.56.100"
+  
+
+  # Agrego disco rigidos Extras (Nombres distintos)
+  config.vm.disk :disk, size: "8GB", name: "#{config.vm.hostname}_extra_storage_01"
+  config.vm.disk :disk, size: "2GB", name: "#{config.vm.hostname}_extra_storage_02"
+
+  #Configuraciones de la VM en VirtualBox
+  config.vm.provider "qemu" do |qe|
+
+      qe.arch = "aarch64"
+
+      qe.machine = "virt,accel=hvf,highmem=off"
+
+       qe.cpu = "host"
+
+      #Cantidad de RAM
+      qe.memory = "2048"
+      #Cantidad de Procesadores
+      qe.cpus = 2
+
+      #Nombre de la VM en VirtualBox 
+      qe.name = "Examen202509-#{VMPostFijo}"
+
+      # Mostrar interfaz gráfica de la VM en VirtualBox
+      qe.gui = false
+
+  end
+
+  # Puedo Ejecutar un script que esta en un archivo
+  config.vm.provision "shell", path: "script_Enable_ssh_password.sh"
+  config.vm.provision "shell", privileged: false, path: "script_Fix_history.sh"
+
+  # SSH
+  config.ssh.insert_key = false
+
+end
