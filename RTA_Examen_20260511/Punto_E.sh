@@ -6,8 +6,6 @@ sudo chown -R p1c1_2026_u2:p1c1_2026_gTodos /Punto_D/Musica
 
 sudo chown -R p1c1_2026_u3:p1c1_2026_gTodos /Punto_D/videos
 
-### REVISAR
-
 # Libros
 sudo chmod 710 /Punto_D/Libros
 
